@@ -10,6 +10,8 @@ use Magento\Store\Model\ScopeInterface;
 
 class Street extends OriginalStreetValidator
 {
+    use FullValueMatchTrait;
+
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig
     ) {}
@@ -51,12 +53,16 @@ class Street extends OriginalStreetValidator
         }
 
         if ($this->scopeConfig->isSetFlag('customer/address/use_builtin_street_regex', ScopeInterface::SCOPE_STORE)) {
-            $pattern = "/(?:[\p{L}\p{M}\"[],-.'’`&\s\d]){1,255}+/u";
+            // The unescaped "[" and the "]" that follows it closed the character class early, so
+            // the pattern never matched any address. Core has the same typo, but there it is
+            // harmless: Magento returns true when nothing matches. Here a non-match means
+            // "invalid", so every address was rejected once street validation was switched on.
+            $pattern = "/(?:[\p{L}\p{M}\"\[\],\-.'’`&\s\d]){1,255}+/u";
         } else {
             $pattern = $this->scopeConfig->getValue('customer/address/street_validation_regex',
                 ScopeInterface::SCOPE_STORE);
         }
 
-        return (bool) preg_match($pattern, (string) $streetValue);
+        return $this->matchesEntireValue($pattern, (string) $streetValue);
     }
 }
