@@ -10,6 +10,8 @@ use Magento\Store\Model\ScopeInterface;
 
 class City extends OriginalCityValidator
 {
+    use FullValueMatchTrait;
+
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig
     ) {}
@@ -51,6 +53,6 @@ class City extends OriginalCityValidator
             $pattern = $this->scopeConfig->getValue('customer/address/city_validation_regex', ScopeInterface::SCOPE_STORE);
         }
 
-        return (bool) preg_match($pattern, (string) $cityValue);
+        return $this->matchesEntireValue($pattern, (string) $cityValue);
     }
 }

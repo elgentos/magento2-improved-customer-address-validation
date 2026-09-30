@@ -10,6 +10,8 @@ use Magento\Store\Model\ScopeInterface;
 
 class Name extends OriginalNameValidator
 {
+    use FullValueMatchTrait;
+
     public function __construct(
         private readonly ScopeConfigInterface $scopeConfig
     ) {}
@@ -57,6 +59,6 @@ class Name extends OriginalNameValidator
             $pattern = $this->scopeConfig->getValue('customer/address/name_validation_regex', ScopeInterface::SCOPE_STORE);
         }
 
-        return (bool) preg_match($pattern, (string) $nameValue);
+        return $this->matchesEntireValue($pattern, (string) $nameValue);
     }
 }
