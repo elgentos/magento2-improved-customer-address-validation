@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Elgentos\ImprovedCustomerAddressValidation\Model\Validator;
 
-use Magento\Customer\Model\Validator\Telephone as OriginalTelephoneValidator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Validator\AbstractValidator;
 use Magento\Store\Model\ScopeInterface;
 
-class Telephone extends OriginalTelephoneValidator
+class Telephone extends AbstractValidator
 {
     use FullValueMatchTrait;
 
@@ -21,7 +21,7 @@ class Telephone extends OriginalTelephoneValidator
      *
      * @return bool
      */
-    public function isValid($customer)
+    public function isValid($customer): bool
     {
         if (!$this->scopeConfig->isSetFlag('customer/address/enable_telephone_validation', ScopeInterface::SCOPE_STORE)) {
             return true;
