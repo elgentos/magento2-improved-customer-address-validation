@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Elgentos\ImprovedCustomerAddressValidation\Model\Validator;
 
-use Magento\Customer\Model\Validator\Street as OriginalStreetValidator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Validator\AbstractValidator;
 use Magento\Store\Model\ScopeInterface;
 
-class Street extends OriginalStreetValidator
+class Street extends AbstractValidator
 {
     use FullValueMatchTrait;
 
